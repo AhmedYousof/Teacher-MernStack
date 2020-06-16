@@ -5,26 +5,26 @@ const Schema = mongoose.Schema;
 const StudentSchema = new Schema({
   role: {
     type: String,
-    default: "student"
+    default: "student",
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   confirmpassword: {
     type: String,
-    required: true
+    required: true,
   },
   avatar: {
-    type: String
+    type: String,
   },
   courses: [
     {
@@ -33,79 +33,56 @@ const StudentSchema = new Schema({
       course: { type: String, required: true },
       address: { type: String, required: true },
       sallary: { type: String, required: true },
-      date: { type: Date }
-    }
+      date: { type: Date },
+    },
   ],
   city: {
     type: String,
-    default: ""
+    default: "",
   },
   phone: {
-    type: [String]
+    type: String,
   },
   address: {
-    type: String
+    type: String,
   },
   bio: {
-    type: String
+    type: String,
   },
-  education: [
-    {
-      school: {
-        type: String
-      },
-      degree: {
-        type: String
-      },
-      fieldofstudy: {
-        type: String
-      },
-      from: {
-        type: Date
-      },
-      to: {
-        type: Date
-      },
-      current: {
-        type: Boolean,
-        default: false
-      },
-      description: {
-        type: String
-      }
-    }
-  ],
+  website: {
+    type: String,
+  },
   waitings: [
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "teachers"
+        ref: "teachers",
       },
       name: { type: String, required: true },
       course: { type: String, required: true },
       date: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   ],
   social: {
     youtube: {
-      type: String
+      type: String,
     },
     twitter: {
-      type: String
+      type: String,
     },
     facebook: {
-      type: String
+      type: String,
     },
     linkedin: {
-      type: String
+      type: String,
     },
     instagram: {
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 });
 
 module.exports = User = mongoose.model("students", StudentSchema);

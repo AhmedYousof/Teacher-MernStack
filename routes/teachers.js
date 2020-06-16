@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
 // validations
-const validateRegisterInput = require("../validation/register");
+const validateTeacherRegisterInput = require("../validation/register");
 const validateProfileInput = require("../validation/profile");
 
 /*router.get("/register", (req, res) => {
@@ -21,12 +21,12 @@ const validateProfileInput = require("../validation/profile");
 //@DESC Teacher register
 //@Parmeters(name, email, password, confirmpassword)
 router.post("/register", (req, res, next) => {
-  const { errors, isValid } = validateRegisterInput(req.body);
+  const { errors, isValid } = validateTeacherRegisterInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  Teacher.findOne({ email: req.body.email }).then(teacher => {
-    Student.findOne({ email: req.body.email }).then(user => {
+  Teacher.findOne({ email: req.body.email }).then((teacher) => {
+    Student.findOne({ email: req.body.email }).then((user) => {
       errors.email = "Email Already exists";
       if (user || teacher) {
         return res.status(400).json(errors);
@@ -34,7 +34,7 @@ router.post("/register", (req, res, next) => {
         const avatar = gravatar.url(req.body.email, {
           s: "200",
           r: "pg",
-          d: "mm"
+          d: "mm",
         });
         const newUser = new Teacher({
           name: req.body.name,
@@ -46,18 +46,18 @@ router.post("/register", (req, res, next) => {
           city: req.body.city,
           course: req.body.course,
           sallary: req.body.sallary,
-          avatar
+          avatar,
         });
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
             newUser.password = hash;
-            bcrypt.compare(newUser.confirmpassword, hash).then(isMatch => {
+            bcrypt.compare(newUser.confirmpassword, hash).then((isMatch) => {
               if (isMatch) {
                 newUser
                   .save()
-                  .then(user => res.json(user))
-                  .catch(err => console.log(err));
+                  .then((user) => res.json(user))
+                  .catch((err) => console.log(err));
               } else {
                 return res.status(400).json("Confirm Password isn't correct ");
               }
@@ -96,8 +96,8 @@ router.post(
 
       user
         .save()
-        .then(user => res.json(user))
-        .catch(err => console.log(err));
+        .then((user) => res.json(user))
+        .catch((err) => console.log(err));
     });
   }
 );
@@ -111,7 +111,7 @@ router.get(
     const errors = {};
 
     Teacher.find()
-      .then(profiles => {
+      .then((profiles) => {
         if (!profiles) {
           errors.noprofile = "There is no profile for this user";
           return res.status(404).json(errors);
@@ -119,7 +119,7 @@ router.get(
 
         res.json(profiles);
       })
-      .catch(err => res.status(404).json(err));
+      .catch((err) => res.status(404).json(err));
   }
 );
 
@@ -128,14 +128,14 @@ router.get(
 router.get("/", (req, res, next) => {
   const errors = {};
   Teacher.find({})
-    .then(teachers => {
+    .then((teachers) => {
       if (!teachers) {
         errors.noteachers = "there are no teachers";
         return res.status(404).json(errors);
       }
       res.json(teachers);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(404).json({ teachers: "There are no teachers" });
     });
 });
@@ -144,14 +144,14 @@ router.get("/", (req, res, next) => {
 router.get("/teacher/:teacher_id", (req, res) => {
   const errors = {};
   Teacher.findOne({ _id: req.params.teacher_id })
-    .then(teacher => {
+    .then((teacher) => {
       if (!teacher) {
         errors.noteachers = "there are no teacher";
         return res.status(404).json(errors);
       }
       res.json(teacher);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(404).json({ teachers: "There are no teacher" });
     });
 });

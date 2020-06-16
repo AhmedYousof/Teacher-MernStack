@@ -1,7 +1,7 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
-module.exports = function validateTeacherRegisterInput(data) {
+module.exports = function validateStudentRegisterInput(data) {
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : "";
@@ -13,7 +13,6 @@ module.exports = function validateTeacherRegisterInput(data) {
   data.address = !isEmpty(data.address) ? data.address : "";
   data.phone = !isEmpty(data.phone) ? data.phone : "";
   data.city = !isEmpty(data.city) ? data.city : "";
-  data.course = !isEmpty(data.course) ? data.course : "";
 
   if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
     errors.name = "Name must be between 2 and 30 characters!";
@@ -34,9 +33,6 @@ module.exports = function validateTeacherRegisterInput(data) {
   }
   if (Validator.isEmpty(data.city)) {
     errors.city = "City Is Required!";
-  }
-  if (Validator.isEmpty(data.course)) {
-    errors.course = "Course Is Required!";
   }
 
   if (Validator.isEmpty(data.address)) {

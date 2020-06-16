@@ -4,9 +4,35 @@ const isEmpty = require("./is-empty");
 module.exports = function validateProfileInput(data) {
   let errors = {};
 
-  // if (Validator.isEmpty(data.courses)) {
-  //errors.courses = "Skills field is required";
-  //}
+  data.name = !isEmpty(data.name) ? data.name : "";
+  data.address = !isEmpty(data.address) ? data.address : "";
+  data.phone = !isEmpty(data.phone) ? data.phone : "";
+  data.city = !isEmpty(data.city) ? data.city : "";
+  data.course = !isEmpty(data.course) ? data.course : "";
+  if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
+    errors.name = "Name must be between 2 and 30 characters!";
+  }
+
+  if (Validator.isEmpty(data.name)) {
+    errors.name = "Name Is Required!";
+  }
+
+  if (Validator.isEmpty(data.city)) {
+    errors.city = "City Is Required!";
+  }
+  if (Validator.isEmpty(data.course)) {
+    errors.course = "Course Is Required!";
+  }
+
+  if (Validator.isEmpty(data.address)) {
+    errors.address = "Address Is Required!";
+  }
+  if (Validator.isEmpty(data.phone)) {
+    errors.phone = "Phone Is Required!";
+  }
+  if (!Validator.isLength(data.phone, { min: 11, max: 11 })) {
+    errors.phone = "Phone Must Be 11 characters!";
+  }
 
   if (!isEmpty(data.website)) {
     if (!Validator.isURL(data.website)) {
@@ -46,6 +72,6 @@ module.exports = function validateProfileInput(data) {
 
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };

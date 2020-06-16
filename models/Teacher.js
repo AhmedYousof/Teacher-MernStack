@@ -5,55 +5,55 @@ const Schema = mongoose.Schema;
 const TeacherSchema = new Schema({
   role: {
     type: String,
-    default: "teacher"
+    default: "teacher",
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   confirmpassword: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: String,
-    default: ""
+    default: "",
   },
   sallary: {
     type: String,
-    default: 0
+    default: 0,
   },
   avatar: {
-    type: String
+    type: String,
   },
   course: {
-    type: String
+    type: String,
   },
   city: {
     type: String,
-    default: ""
+    default: "",
   },
   waitings: [
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "students"
+        ref: "students",
       },
       name: { type: String, required: true },
       course: { type: String, required: true },
       date: {
         type: Date,
-        default: Date.now()
-      }
-    }
+        default: Date.now(),
+      },
+    },
   ],
   courses: [
     {
@@ -62,33 +62,36 @@ const TeacherSchema = new Schema({
       course: { type: String, required: true },
       address: { type: String, required: true },
       sallary: { type: String, required: true },
-      date: { type: Date, default: Date.now }
-    }
+      date: { type: Date, default: Date.now },
+    },
   ],
   phone: {
-    type: [String]
+    type: String,
   },
   bio: {
     type: String,
-    default: ""
+    default: "",
+  },
+  website: {
+    type: String,
   },
   social: {
     twitter: {
-      type: String
+      type: String,
     },
     facebook: {
-      type: String
+      type: String,
     },
     youtube: {
-      type: String
+      type: String,
     },
     linkedin: {
-      type: String
+      type: String,
     },
     instagram: {
-      type: String
-    }
-  }
+      type: String,
+    },
+  },
 });
 
 module.exports = Teacher = mongoose.model("teachers", TeacherSchema);
