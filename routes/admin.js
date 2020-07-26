@@ -79,46 +79,67 @@ router.get("/courses", (req, res) => {
     .catch((err) => res.status(404).json(err));
 });
 
-router.get("/teachers", (req, res, next) => {
-  Admin.findOne({ email: "admin@teacher.com" }).then((admin) => {
-    if (admin) {
-      user = admin;
+router.get(
+  "/teachers",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Teacher.find().then((teachers) => {
+      if (!teachers) {
+        return res.status(404).json(errors);
+      }
+      res.json(teachers);
+    });
+  }
+);
 
-      Teacher.find({}).then((teachers) => res.json(teachers));
-    }
-  });
-});
-
-router.get("/students", (req, res, next) => {
-  Admin.findOne({ email: "admin@teacher.com" }).then((admin) => {
-    user = admin;
-    if (admin) {
-      Student.find({}).then((teachers) => res.json(teachers));
-    }
-  });
-});
+router.get(
+  "/students",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Student.find().then((students) => {
+      if (!students) {
+        return res.status(404).json(errors);
+      }
+      res.json(students);
+    });
+  }
+);
 
 router.post(
   "/remove-student/:student_id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Admin.findOne({ _id: user.id }).then((admin) => {
+    Admin.findOne({ _id: req.user.id }).then((admin) => {
       if (admin) {
         Student.findByIdAndDelete(req.params.student_id).then(
           (err, student) => {
             if (err) return next(err);
-            res.json("DELETED");
+            // res.json(student);
           }
         );
       }
     });
+    Teacher.find().then((teachers) => {
+      teachers.map((teacher) => {
+        const index = teacher.waitings
+          .map((waiting) => waiting.user)
+          .indexOf(req.params.student_id);
+        teacher.waitings.splice(index, 1);
+        const courseIndex = teacher.courses
+          .map((course) => course.courseId)
+          .indexOf(req.params.student_id);
+        teacher.courses.splice(courseIndex, 1);
+        teacher.save().then((user) => res.json(user));
+      });
+    });
   }
 );
+
 router.post(
   "/remove-teacher/:teacher_id",
   passport.authenticate("jwt", { session: false }),
   (req, res, next) => {
-    Admin.findOne({ _id: user.id }).then((admin) => {
+    Admin.findOne({ _id: req.user.id }).then((admin) => {
       if (admin) {
         Teacher.findByIdAndDelete(req.params.teacher_id).then(
           (err, teacher) => {
@@ -127,6 +148,19 @@ router.post(
           }
         );
       }
+    });
+    Student.find().then((students) => {
+      students.map((student) => {
+        const index = student.waitings
+          .map((waiting) => waiting.user)
+          .indexOf(req.params.teacher_id);
+        student.waitings.splice(index, 1);
+        const courseIndex = student.courses
+          .map((course) => course.courseId)
+          .indexOf(req.params.teacher_id);
+        student.courses.splice(courseIndex, 1);
+        student.save().then((user) => res.json(user));
+      });
     });
   }
 );

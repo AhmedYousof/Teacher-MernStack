@@ -12,11 +12,6 @@ const passport = require("passport");
 const validateTeacherRegisterInput = require("../validation/register");
 const validateProfileInput = require("../validation/profile");
 
-/*router.get("/register", (req, res) => {
-  Course.find().then(courses => {
-    res.json(courses);
-  });
-});*/
 //@ROUTE POST localhost:3000/teachers/register
 //@DESC Teacher register
 //@Parmeters(name, email, password, confirmpassword)
@@ -68,39 +63,6 @@ router.post("/register", (req, res, next) => {
     });
   });
 });
-
-//@Route POST localhost:3000/teachers/edit-profile
-//@DESC Edit teacher profile
-router.post(
-  "/edit-profile",
-  passport.authenticate("jwt", { session: false }),
-  (req, res, next) => {
-    const { errors, isValid } = validateProfileInput(req.body);
-
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-    Teacher.findOne({ _id: req.user._id }, (err, user) => {
-      if (err) return next(err);
-      if (req.body.name) user.profile.name = req.body.name;
-      if (req.body.address) user.address = req.body.address;
-      if (req.body.sallary) user.sallary = req.body.sallary;
-      //if (req.body.courses) user.courses = req.body.courses;
-      if (req.body.phone) user.phone = req.body.phone;
-      if (req.body.bio) user.bio = req.body.bio;
-      if (req.body.facebook) user.social.facebook = req.body.facebook;
-      if (req.body.youtube) user.social.youtube = req.body.youtube;
-      if (req.body.twitter) user.social.twitter = req.body.twitter;
-      if (req.body.instagram) user.social.instagram = req.body.instagram;
-      if (req.body.linkedin) user.social.linkedin = req.body.linkedin;
-
-      user
-        .save()
-        .then((user) => res.json(user))
-        .catch((err) => console.log(err));
-    });
-  }
-);
 
 //@Route GET localhost:5000/profile
 //@Desc GET USER PROFILE
